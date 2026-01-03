@@ -44,14 +44,14 @@ jobs:
 
       # Validate types with tsc - https://www.typescriptlang.org/docs/handbook/compiler-options.html#using-the-cli
       - name: Run Typecheck (TS files)
-        run: pnpm typecheck
+        run: pnpm typecheck --skipLibCheck false
         id: typecheck
         if: ${{ !cancelled() }}
 
       # Run tsc again on all JS files.
       # Required in order to use separate rules for different types of files
       - name: Run Typecheck (JS files)
-        run: pnpm typecheck:js
+        run: pnpm typecheck:js --skipLibCheck false
         id: typecheck-js
         if: ${{ !cancelled() }}
 
