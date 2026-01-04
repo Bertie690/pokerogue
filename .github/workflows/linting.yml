@@ -5,43 +5,57 @@ on:
     branches:
       - main
       - beta
+      - release
+      - "hotfix*"
   pull_request:
     branches:
       - main
       - beta
+      - release
+      - "hotfix*"
   merge_group:
     types: [checks_requested]
+  workflow_dispatch:
 
 jobs:
   run-linters:
-    name: Run linters
+    name: Run all linters
+    timeout-minutes: 10
     runs-on: ubuntu-latest
 
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
-          submodules: 'recursive'
+          submodules: "recursive"
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: '.nvmrc'
-          cache: 'pnpm'
+      - uses: ./.github/actions/setup-deps
 
-      - name: Install Node.js dependencies
-        run: pnpm i
-
+      # Lint files with Biome-Lint - https://biomejs.dev/linter/
       - name: Lint with Biome
         run: pnpm biome-ci
+        if: ${{ !cancelled() }}
 
-      - name: Check dependencies with depcruise
+      # Validate dependencies with dependency-cruiser - https://github.com/sverweij/dependency-cruiser
+      - name: Run Dependency Cruiser
         run: pnpm depcruise
-      
-      - name: Lint with ls-lint
-        run: pnpm ls-lint
+        if: ${{ !cancelled() }}
+
+      # Validate types with tsc - https://www.typescriptlang.org/docs/handbook/compiler-options.html#using-the-cli
+      - name: Run Typecheck (TS files)
+        run: pnpm typecheck
+        id: typecheck
+        if: ${{ !cancelled() }}
+
+      # Run tsc again on all JS files.
+      # Required in order to use separate rules for different types of files
+      - name: Run Typecheck (JS files)
+        run: pnpm typecheck:js
+        id: typecheck-js
+        if: ${{ !cancelled() }}
+
+      - name: Check for REUSE compliance
+        id: reuse-lint
+        uses: fsfe/reuse-action@v5
+        if: ${{ !cancelled() }}

@@ -1,45 +1,47 @@
+import type { UserConfig } from "vite";
 import { defineProject } from "vitest/config";
 import { BaseSequencer, type TestSpecification } from "vitest/node";
 import { defaultConfig } from "./vite.config";
 
-export default defineProject(({ mode }) => ({
-  ...defaultConfig,
-  test: {
-    env: {
-      TZ: "UTC",
-    },
-    testTimeout: 20000,
-    setupFiles: ["./test/font-face.setup.ts", "./test/vitest.setup.ts", "./test/matchers.setup.ts"],
-    sequence: {
-      sequencer: MySequencer,
-    },
-    environment: "jsdom" as const,
-    environmentOptions: {
-      jsdom: {
-        resources: "usable",
+export default defineProject(
+  ({ mode }) =>
+    ({
+      ...defaultConfig,
+      test: {
+        env: {
+          TZ: "UTC",
+        },
+        testTimeout: 20000,
+        setupFiles: ["./test/font-face.setup.ts", "./test/vitest.setup.ts", "./test/matchers.setup.ts"],
+        sequence: {
+          sequencer: MySequencer,
+        },
+        environment: "jsdom" as const,
+        environmentOptions: {
+          jsdom: {
+            resources: "usable",
+          },
+        },
+        typecheck: {
+          tsconfig: "tsconfig.json",
+          include: ["./test/types/**/*.{test,spec}{-|.}d.ts"],
+        },
+        restoreMocks: true,
+        watch: false,
+        coverage: {
+          provider: "istanbul" as const,
+          reportsDirectory: "coverage" as const,
+          reporter: ["text-summary", "html"],
+        },
+        name: "main",
+        include: ["./test/**/*.{test,spec}.ts"],
       },
-    },
-    typecheck: {
-      tsconfig: "tsconfig.json",
-      include: ["./test/types/**/*.{test,spec}{-|.}d.ts"],
-    },
-    threads: false,
-    trace: true,
-    restoreMocks: true,
-    watch: false,
-    coverage: {
-      provider: "istanbul" as const,
-      reportsDirectory: "coverage" as const,
-      reporters: ["text-summary", "html"],
-    },
-    name: "main",
-    include: ["./test/**/*.{test,spec}.ts"],
-  },
-  esbuild: {
-    pure: mode === "production" ? ["console.log"] : [],
-    keepNames: true,
-  },
-}));
+      esbuild: {
+        pure: mode === "production" ? ["console.log"] : [],
+        keepNames: true,
+      },
+    }) satisfies UserConfig,
+);
 
 //#region Helpers
 
