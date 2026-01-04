@@ -23,12 +23,15 @@ jobs:
           submodules: "recursive"
 
       - uses: ./.github/actions/setup-deps
-      
+
       - name: Run tests
         run: >
           pnpm test:silent
           --shard=${{ inputs.shard }}/${{ inputs.totalShards }}
           --reporter=blob
+          --coverage=true
+          --coverage.reporter=text-summary,json
+          --coverage.reportsDirectory=test-results
           --outputFile=test-results/blob-${{ inputs.shard }}.json || true
 
       # NB: This CANNOT be made into a job output due to not being extractable from the matrix:
@@ -37,7 +40,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: shard-${{ inputs.shard }}-blob
-          path: test-results/blob-${{ inputs.shard }}.json
+          path: test-results
           retention-days: 1 # don't need to keep for very long since they get merged afterwards
           overwrite: true
           if-no-files-found: error

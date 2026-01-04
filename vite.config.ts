@@ -13,7 +13,7 @@ export const defaultConfig: UserConfig = {
     : [
         tsconfigPaths(),
         require("./src/plugins/vite/vite-minify-json-plugin").minifyJsonPlugin(["images", "battle-anims"], true),
-        require("./src/plugins/vite/namespaces-i18n-plugin").LocaleNamespace(),
+        // require("./src/plugins/vite/namespaces-i18n-plugin").LocaleNamespace(),
       ],
   clearScreen: false,
   appType: "mpa",

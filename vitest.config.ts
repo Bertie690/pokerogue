@@ -31,6 +31,7 @@ export default defineProject(
         coverage: {
           provider: "istanbul" as const,
           reportsDirectory: "coverage" as const,
+
           reporter: ["text-summary", "html"],
         },
         name: "main",
