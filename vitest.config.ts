@@ -22,6 +22,7 @@ export default defineConfig(async config => {
       env: {
         TZ: "UTC",
       },
+      isolate: false,
       testTimeout: 20_000,
       slowTestThreshold: 10_000,
       // TODO: Vitest's current framework produces spurious errors for type tests with this option enabled.
@@ -41,15 +42,16 @@ export default defineConfig(async config => {
         },
       },
       typecheck: {
+        enabled: true,
         tsconfig: "tsconfig.json",
         include: ["./test/types/**/*.{test,spec}{-|.}d.ts"],
       },
       restoreMocks: true,
       watch: false,
       coverage: {
-        provider: "istanbul",
-        reportsDirectory: "coverage",
-        reporter: ["text-summary", "html"],
+        provider: "v8",
+        reportsDirectory: "test-results/coverage",
+        reporter: process.env.MERGE_REPORTS ? ["text-summary", "json-summary"] : [],
       },
       name: "main",
       include: ["./test/**/*.{test,spec}.ts"],
