@@ -29,10 +29,11 @@ export default defineProject(
         restoreMocks: true,
         watch: false,
         coverage: {
+          enabled: true,
           provider: "istanbul" as const,
           reportsDirectory: "coverage" as const,
-
-          reporter: ["text-summary", "html"],
+          exclude: ["public", "assets", "locales", "scripts"],
+          reporter: process.env.MERGE_REPORTS ? ["text-summary"] : [],
         },
         name: "main",
         include: ["./test/**/*.{test,spec}.ts"],
