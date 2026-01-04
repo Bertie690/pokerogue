@@ -30,7 +30,6 @@ jobs:
           --shard=${{ inputs.shard }}/${{ inputs.totalShards }}
           --reporter=blob
           --coverage=true
-          --coverage.reporter=text-summary,json
           --coverage.reportsDirectory=test-results
           --outputFile=test-results/blob-${{ inputs.shard }}.json || true
 
