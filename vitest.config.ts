@@ -50,7 +50,7 @@ export default defineConfig(async config => {
       coverage: {
         provider: "v8",
         reportsDirectory: "test-results/coverage",
-        reporter: ["text-summary", "json-summary"],
+        reporter: process.env.MERGE_REPORTS ? ["text-summary", "json-summary"] : [],
       },
       name: "main",
       include: ["./test/**/*.{test,spec}.ts"],

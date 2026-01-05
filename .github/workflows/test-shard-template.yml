@@ -37,9 +37,6 @@ jobs:
           --outputFile=test-results/blob-${{ inputs.shard }}.json
           || true
 
-      - name: Move coverage report
-        run: mv test-results/coverage test-results/coverage-${{ inputs.shard }}
-
       # NB: This CANNOT be made into a job output due to not being extractable from the matrix:
       # https://github.com/orgs/community/discussions/17245
       - name: Upload test result blobs
