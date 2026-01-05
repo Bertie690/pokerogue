@@ -16,9 +16,11 @@ export default defineConfig(async config => {
     ...viteConfig,
     test: {
       passWithNoTests: false,
-      reporters: process.env.GITHUB_ACTIONS
+      reporters: process.env.MERGE_REPORTS
         ? ["github-actions", "default"]
-        : ["default"],
+        : process.env.GITHUB_ACTIONS
+          ? ["blob", "default"]
+          : ["default"],
       env: {
         TZ: "UTC",
       },
