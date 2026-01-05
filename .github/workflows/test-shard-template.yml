@@ -37,8 +37,8 @@ jobs:
           --outputFile=test-results/blob-${{ inputs.shard }}.json
           || true
 
-      - name: check what files exist
-        run: ls -la test-results
+      - name: Move coverage report
+        run: mv test-results/coverage test-results/coverage-${{ inputs.shard }}
 
       # NB: This CANNOT be made into a job output due to not being extractable from the matrix:
       # https://github.com/orgs/community/discussions/17245
@@ -46,7 +46,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: shard-${{ inputs.shard }}-blob
-          path: test-results/blob-${{ inputs.shard }}.json
+          path: test-results
           retention-days: 1 # don't need to keep for very long since they get merged afterwards
           overwrite: true
           if-no-files-found: error
