@@ -16,9 +16,11 @@ export default defineConfig(async config => {
     ...viteConfig,
     test: {
       passWithNoTests: false,
-      reporters: process.env.GITHUB_ACTIONS
+      reporters: process.env.MERGE_REPORTS
         ? ["github-actions", "./test/test-utils/reporters/custom-default-reporter.ts"]
-        : ["./test/test-utils/reporters/custom-default-reporter.ts"],
+        : process.env.GITHUB_ACTIONS
+          ? ["blob", "./test/test-utils/reporters/custom-default-reporter.ts"]
+          : ["./test/test-utils/reporters/custom-default-reporter.ts"],
       env: {
         TZ: "UTC",
       },
@@ -49,8 +51,9 @@ export default defineConfig(async config => {
       watch: false,
       coverage: {
         provider: "v8",
-        reportsDirectory: "test-results/coverage",
+        reportsDirectory: "coverage",
         reporter: process.env.MERGE_REPORTS ? ["text-summary", "json-summary"] : [],
+        exclude: ["public", "assets", "locales"],
       },
       name: "main",
       include: ["./test/**/*.{test,spec}.ts"],
