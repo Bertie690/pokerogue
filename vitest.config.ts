@@ -17,8 +17,8 @@ export default defineConfig(async config => {
     test: {
       passWithNoTests: false,
       reporters: process.env.GITHUB_ACTIONS
-        ? ["github-actions", "./test/test-utils/reporters/custom-default-reporter.ts"]
-        : ["./test/test-utils/reporters/custom-default-reporter.ts"],
+        ? ["github-actions", "default"]
+        : ["default"],
       env: {
         TZ: "UTC",
       },
