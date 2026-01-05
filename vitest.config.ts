@@ -42,7 +42,6 @@ export default defineConfig(async config => {
         },
       },
       typecheck: {
-        enabled: true,
         tsconfig: "tsconfig.json",
         include: ["./test/types/**/*.{test,spec}{-|.}d.ts"],
       },
