@@ -32,7 +32,7 @@ export default defineConfig(async config => {
       // expect: {
       //   requireAssertions: true,
       // },
-      setupFiles: ["./test/setup/font-face.setup.ts", "./test/setup/vitest.setup.ts", "./test/setup/matchers.setup.ts"],
+      setupFiles: ["./test/font-face.setup.ts", "./test/vitest.setup.ts", "./test/matchers.setup.ts"],
       sequence: {
         sequencer: MySequencer,
       },
