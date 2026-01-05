@@ -9,6 +9,10 @@ on:
       totalShards:
         required: true
         type: number
+      coverage:
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   test:
@@ -29,9 +33,9 @@ jobs:
           pnpm test:silent
           --shard=${{ inputs.shard }}/${{ inputs.totalShards }}
           --reporter=blob
-          --coverage=true
-          --coverage.reportsDirectory=test-results
-          --outputFile=test-results/blob-${{ inputs.shard }}.json || true
+          --coverage=${{ inputs.coverage }}
+          --outputFile=test-results/blob-${{ inputs.shard }}.json
+          || true
 
       # NB: This CANNOT be made into a job output due to not being extractable from the matrix:
       # https://github.com/orgs/community/discussions/17245

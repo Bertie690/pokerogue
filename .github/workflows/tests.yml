@@ -21,7 +21,6 @@ jobs:
   check-path-change-filter:
     timeout-minutes: 5
     runs-on: ubuntu-latest
-    if: ${{ github.event_name != 'workflow_dispatch' }}
     permissions:
       pull-requests: read
     outputs:
@@ -52,6 +51,7 @@ jobs:
     with:
       shard: ${{ matrix.shard }}
       totalShards: 5
+      coverage: true
 
   check-results:
     name: Check Test Results
@@ -68,7 +68,6 @@ jobs:
             test/setup
             test/test-utils/reporters/custom-default-reporter.ts
 
-
       - uses: ./.github/actions/setup-deps
 
       - name: Download blob artifacts
@@ -80,3 +79,13 @@ jobs:
 
       - name: Merge blobs
         run: pnpm test:merge-reports
+
+      # TODO: Turn this into a shields.io badge later; I just want to validate the output
+      - name: Upload merged results
+        uses: actions/upload-artifact@v4
+        with:
+          name: merged-test-results
+          path: test-results
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 14
